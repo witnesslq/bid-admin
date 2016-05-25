@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <context:component-scan base-package="com.hnczb" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:include-filter type="annotation"
+                                expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8"/>
+            </bean>
+            <!-- 将Jackson2HttpMessageConverter的默认格式化输出设为true -->
+            <bean class="com.hnczb.admin.json.CustomJackson2HttpMessageConverter">
+                <property name="prettyPrint" value="true"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 定义JSP文件的位置 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!-- 配置springMVC处理上传文件的信息 -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="maxUploadSize" value="104857600"/>
+        <property name="maxInMemorySize" value="40960"/>
+    </bean>
+
+    <!-- 容器默认的DefaultServletHandler处理 所有静态内容与无RequestMapping处理的URL-->
+    <mvc:default-servlet-handler/>
+    <!--未没有controller设置地址-->
+    <mvc:view-controller path="/support/login" view-name="login"/>
+    <mvc:view-controller path="/support/feedback/list?status=1" view-name="/support"/>
+
+
+    <!-- enable autowire -->
+    <context:annotation-config/>
+
+    <aop:config proxy-target-class="true"></aop:config>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+
+    </bean>
+
+    <!--&lt;!&ndash; feature环境配置 &ndash;&gt;-->
+    <!--<beans profile="feature">-->
+        <!--<context:property-placeholder-->
+                <!--ignore-resource-not-found="true"-->
+                <!--location="classpath*:application-admin.feature.properties"/>-->
+    <!--</beans>-->
+
+    <!-- 开发环境配置 -->
+    <beans profile="development">
+        <context:property-placeholder
+                ignore-resource-not-found="true"
+                location="classpath*:application-admin.development.properties"/>
+    </beans>
+
+    <!--&lt;!&ndash; 测试环境配置 &ndash;&gt;-->
+    <!--<beans profile="test">-->
+        <!--<context:property-placeholder-->
+                <!--ignore-resource-not-found="true"-->
+                <!--location="classpath*:application-admin.test.properties"/>-->
+    <!--</beans>-->
+
+    <!--&lt;!&ndash; 生产环境配置 &ndash;&gt;-->
+    <!--<beans profile="production">-->
+        <!--<context:property-placeholder-->
+                <!--ignore-resource-not-found="true"-->
+                <!--location="classpath*:application-admin.production.properties"/>-->
+    <!--</beans>-->
+
+</beans>

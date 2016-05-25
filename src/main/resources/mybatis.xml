@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<!-- 配置全局设置，参照API -->
+	<!-- <settings> -->
+	<!-- 开启batch -->
+	<!-- <setting name="defaultExecutorType" value="BATCH" /> -->
+	<!-- </settings> -->
+
+	<!-- 配置别名，已在spring配置，无需重复配置 -->
+	<typeAliases>
+	</typeAliases>
+
+	<!-- 由于已在spring配置文件里扫描mappper，无需重复配置 -->
+	<!-- <mappers> <mapper resource="classpath:com/nikey/oa/mapper/Demo/EmployeeMapper.xml"/> 
+		</mappers> -->
+
+	<!-- 添加对一些特殊类型的处理，详情参照API -->
+	<typeHandlers>
+		<typeHandler handler="org.apache.ibatis.type.BooleanTypeHandler"
+			javaType="Boolean" jdbcType="BIT" />
+		<typeHandler handler="org.apache.ibatis.type.BlobTypeHandler"
+			javaType="byte[]" jdbcType="BLOB" />
+	</typeHandlers>
+
+</configuration>

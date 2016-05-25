@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd"
+       default-lazy-init="true">
+
+    <!-- Atomikos 多数据源事务支持配置 -->
+
+    <bean  id="adminDataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">
+        <property name="uniqueResourceName" value="db_admin"/>
+        <property name="xaDataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlXADataSource"/>
+        <property name="xaProperties">
+            <props>
+                <prop key="url">${jdbc.admin.url}</prop>
+                <prop key="user">${jdbc.admin.username}</prop>
+                <prop key="password">${jdbc.admin.password}</prop>
+            </props>
+        </property>
+        <property name="minPoolSize" value="${jdbc.admin.minIdle}"/>
+        <property name="maxPoolSize" value="${jdbc.admin.maxActive}"/>
+        <property name="borrowConnectionTimeout" value="30"/>
+        <property name="testQuery" value="select 1"/>
+        <property name="maintenanceInterval" value="60"/>
+    </bean>
+
+    <!-- scan for mappers and let them be autowired -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.hnczb.admin.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="adminSqlSessionFactory"/>
+    </bean>
+
+
+    <!-- define the SqlSessionFactory -->
+    <bean id="adminSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="adminDataSource"/>
+        <property name="typeAliasesPackage" value="com.hnczb.admin.entity"/>
+        <property name="mapperLocations" value="classpath*:com/hnczb/admin/mapper/*.xml"/>
+    </bean>
+    <!--star user-->
+    <bean  id="userDataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">
+        <property name="uniqueResourceName" value="db_user"/>
+        <property name="xaDataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlXADataSource"/>
+        <property name="xaProperties">
+            <props>
+                <prop key="url">${jdbc.user.url}</prop>
+                <prop key="user">${jdbc.user.username}</prop>
+                <prop key="password">${jdbc.user.password}</prop>
+            </props>
+        </property>
+        <property name="minPoolSize" value="${jdbc.user.minIdle}"/>
+        <property name="maxPoolSize" value="${jdbc.user.maxActive}"/>
+        <property name="borrowConnectionTimeout" value="30"/>
+        <property name="testQuery" value="select 1"/>
+        <property name="maintenanceInterval" value="60"/>
+    </bean>
+
+    <bean id="userSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="userDataSource"/>
+        <property name="typeAliasesPackage" value="com.hnczb.user.entity"/>
+        <property name="mapperLocations" value="classpath*:com/hnczb/user/mapper/*.xml"/>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.hnczb.user.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="userSqlSessionFactory"/>
+    </bean>
+
+    <!--start project-->
+    <bean  id="projectDataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">
+        <property name="uniqueResourceName" value="db_project"/>
+        <property name="xaDataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlXADataSource"/>
+        <property name="xaProperties">
+            <props>
+                <prop key="url">${jdbc.project.url}</prop>
+                <prop key="user">${jdbc.project.username}</prop>
+                <prop key="password">${jdbc.project.password}</prop>
+            </props>
+        </property>
+        <property name="minPoolSize" value="${jdbc.project.minIdle}"/>
+        <property name="maxPoolSize" value="${jdbc.project.maxActive}"/>
+        <property name="borrowConnectionTimeout" value="30"/>
+        <property name="testQuery" value="select 1"/>
+        <property name="maintenanceInterval" value="60"/>
+    </bean>
+
+    <bean id="projectSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="userDataSource"/>
+        <property name="typeAliasesPackage" value="com.hnczb.project.entity"/>
+        <property name="mapperLocations" value="classpath*:com/hnczb/project/mapper/*.xml"/>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.hnczb.project.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="userSqlSessionFactory"/>
+    </bean>
+    <!-- sms 连接池  begin-->
+    <!--<bean  id="smsDataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">-->
+        <!--<property name="uniqueResourceName" value="db_sms"/>-->
+        <!--<property name="xaDataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlXADataSource"/>-->
+        <!--<property name="xaProperties">-->
+            <!--<props>-->
+                <!--<prop key="url">${jdbc.sms.url}</prop>-->
+                <!--<prop key="user">${jdbc.sms.username}</prop>-->
+                <!--<prop key="password">${jdbc.sms.password}</prop>-->
+            <!--</props>-->
+        <!--</property>-->
+        <!--<property name="minPoolSize" value="${jdbc.sms.minIdle}"/>-->
+        <!--<property name="maxPoolSize" value="${jdbc.sms.maxActive}"/>-->
+        <!--<property name="borrowConnectionTimeout" value="30"/>-->
+        <!--<property name="testQuery" value="select 1"/>-->
+        <!--<property name="maintenanceInterval" value="60"/>-->
+    <!--</bean>-->
+
+    <!--&lt;!&ndash; scan for mappers and let them be autowired &ndash;&gt;-->
+    <!--<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">-->
+        <!--<property name="basePackage" value="com.hnczb.sms.mapper"/>-->
+        <!--<property name="sqlSessionFactoryBeanName" value="smsSqlSessionFactory"/>-->
+    <!--</bean>-->
+
+    <!--&lt;!&ndash; define the SqlSessionFactory &ndash;&gt;-->
+    <!--<bean id="smsSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">-->
+        <!--<property name="dataSource" ref="smsDataSource"/>-->
+        <!--<property name="typeAliasesPackage" value="com.hnczb.sms.entity"/>-->
+        <!--<property name="mapperLocations" value="classpath*:com/hnczb/sms/mapper/*.xml"/>-->
+    <!--</bean>-->
+    <!-- sms DBCP连接池 end -->
+    <!-- 分布式事务 -->
+    <bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager" init-method="init" destroy-method="close">
+        <property name="forceShutdown" value="true"/>
+    </bean>
+
+    <bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp">
+        <property name="transactionTimeout" value="300"/>
+    </bean>
+
+
+    <bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+        <property name="transactionManager" ref="atomikosTransactionManager"/>
+        <property name="userTransaction" ref="atomikosUserTransaction"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- feature环境配置 -->
+    <beans profile="feature">
+        <context:property-placeholder
+                ignore-resource-not-found="true"
+                location="classpath*:application-admin.feature.properties"/>
+    </beans>
+
+    <!-- 开发环境配置 -->
+    <beans profile="development">
+        <context:property-placeholder
+                ignore-resource-not-found="true"
+                location="classpath*:application-admin.development.properties"/>
+    </beans>
+
+    <!-- 测试环境配置 -->
+    <beans profile="test">
+        <context:property-placeholder
+                ignore-resource-not-found="true"
+                location="classpath*:application-admin.test.properties"/>
+    </beans>
+
+    <!-- 生产环境配置 -->
+    <beans profile="production">
+        <context:property-placeholder
+                ignore-resource-not-found="true"
+                location="classpath*:application-admin.production.properties"/>
+    </beans>
+</beans>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hnczb.admin.mapper.FunctionMapper" >
+  <resultMap id="BaseResultMap" type="com.hnczb.admin.entity.Function" >
+    <id column="func_id" property="funcId" jdbcType="BIGINT" />
+    <result column="func_name" property="funcName" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+    <result column="action" property="action" jdbcType="VARCHAR" />
+    <result column="permission" property="permission" jdbcType="VARCHAR" />
+    <result column="is_menu" property="isMenu" jdbcType="DECIMAL" />
+    <result column="seq_num" property="seqNum" jdbcType="DECIMAL" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from s_function
+    where func_id = #{funcId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hnczb.admin.entity.Function" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into s_function (func_name, parent_id, action, 
+      permission, is_menu, seq_num
+      )
+    values (#{funcName,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{action,jdbcType=VARCHAR}, 
+      #{permission,jdbcType=VARCHAR}, #{isMenu,jdbcType=DECIMAL}, #{seqNum,jdbcType=DECIMAL}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hnczb.admin.entity.Function" >
+    update s_function
+    set func_name = #{funcName,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=VARCHAR},
+      action = #{action,jdbcType=VARCHAR},
+      permission = #{permission,jdbcType=VARCHAR},
+      is_menu = #{isMenu,jdbcType=DECIMAL},
+      seq_num = #{seqNum,jdbcType=DECIMAL}
+    where func_id = #{funcId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select func_id, func_name, parent_id, action, permission, is_menu, seq_num
+    from s_function
+    where func_id = #{funcId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select func_id, func_name, parent_id, action, permission, is_menu, seq_num
+    from s_function
+  </select>
+  <!-- others add-->
+
+  <select id="findByParentId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select func_id, func_name, parent_id, action, permission, is_menu, seq_num
+    from s_function
+    where parent_id =#{parentId,jdbcType=VARCHAR}
+  </select>
+  <select id="countByParentId" resultType="java.lang.Integer"  >
+    select COUNT(1) from s_function where parent_id =#{parentId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByNameAndPid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select func_id, func_name, parent_id, action, permission, is_menu, seq_num
+    from s_function
+    where parent_id =#{parentId,jdbcType=VARCHAR}
+    and func_name = #{funcName,jdbcType=VARCHAR}
+  </select>
+</mapper>
