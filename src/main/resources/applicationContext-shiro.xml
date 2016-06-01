@@ -8,13 +8,13 @@
 
     
 	<!-- Shiro Filter -->
-	<bean id="rolesOrFilter" class="com.hnczb.admin.security.RolesOrAuthorizationFilter">
+	<bean id="rolesOrFilter" class="com.bid.admin.security.RolesOrAuthorizationFilter">
 	</bean>
 
-	<bean id="uriPermsFilter" class="com.hnczb.admin.security.UriPermissionsAuthorizationFilter">
+	<bean id="uriPermsFilter" class="com.bid.admin.security.UriPermissionsAuthorizationFilter">
 	</bean>
 
-	<bean id="captchaFormFilter" class="com.hnczb.admin.security.CaptchaFormAuthenticationFilter">
+	<bean id="captchaFormFilter" class="com.bid.admin.security.CaptchaFormAuthenticationFilter">
 	</bean>
 
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
@@ -51,7 +51,7 @@
 	   <property name="globalSessionTimeout" value="3600000" />
 	</bean>
 
-	<bean id="shiroDbRealm" class="com.hnczb.admin.security.ShiroDbRealm">
+	<bean id="shiroDbRealm" class="com.bid.admin.security.ShiroDbRealm">
 	</bean>
 
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">

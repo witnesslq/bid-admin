@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bid.admin.mapper.UserMapperEx" >
+  
+  <resultMap id="BaseResultMapEx" extends="com.bid.admin.mapper.UserShiroMapper.BaseResultMap" type="com.bid.admin.entity.UserEx" >
+	  <id property="roleId" column="role_id" />
+	  <result property="roleName" column="role_name" />
+	  <collection property="roles" ofType="role"  resultMap="com.bid.admin.mapper.RoleMapper.BaseResultMap" />
+  </resultMap>
+  
+  <select id="selectRoleByUserId" resultMap="com.bid.admin.mapper.RoleMapper.BaseResultMap" parameterType="java.lang.String" >
+		SELECT
+		  r.*
+		FROM
+		  s_role r
+		JOIN s_user_role ur ON ur.ROLE_ID = r.role_id
+		WHERE user_id = #{userId}
+  </select>
+
+	<select id="getUserExUserId" resultMap="BaseResultMapEx" parameterType="java.lang.String">
+		SELECT
+		u.*, r.*
+		FROM
+		s_user u
+		LEFT JOIN s_user_role ur ON ur.user_id = u.user_id
+		LEFT JOIN s_role r ON r.role_id = ur.role_id
+		WHERE  u.user_id = #{userId}
+	</select>
+
+	<select id="getUserExByLoginName" resultMap="BaseResultMapEx" parameterType="java.lang.String">
+		SELECT
+		u.*, r.*
+		FROM
+		s_user u
+		LEFT JOIN s_user_role ur ON ur.user_id = u.user_id
+		LEFT JOIN s_role r ON r.role_id = ur.role_id
+		WHERE  lower(LOGIN_NAME) = #{loginName}
+	</select>
+	<select id="countUserEx" resultType="java.lang.Integer" >
+		SELECT
+		count(1)
+		FROM
+		s_user u
+		LEFT JOIN s_user_role ur ON ur.user_id = u.user_id
+		LEFT JOIN s_role r ON r.role_id = ur.role_id
+		<where>
+			<trim prefix="(" suffix=")" prefixOverrides="and" >
+                AND u.DEL_FLG=0
+				<if test="loginName!=null">
+					and lower(LOGIN_NAME) = #{loginName}
+				</if>
+				<if test="realName!=null">
+					and real_name = #{realName}
+				</if>
+			</trim>
+		</where>
+
+	</select>
+	<select id="selectUserEx" resultMap="BaseResultMapEx" >
+		SELECT
+		u.*, r.*
+		FROM
+		s_user u
+		LEFT JOIN s_user_role ur ON ur.user_id = u.user_id
+		LEFT JOIN s_role r ON r.role_id = ur.role_id
+		<where>
+			<trim prefix="(" suffix=")" prefixOverrides="and" >
+				AND u.DEL_FLG=0
+				<if test="loginName!=null">
+					and lower(LOGIN_NAME) = #{loginName}
+				</if>
+				<if test="realName!=null">
+					and real_name = #{realName}
+				</if>
+			</trim>
+		</where>
+		limit #{start},#{size}
+	</select>
+  
+</mapper>

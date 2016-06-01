@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bid.admin.mapper.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.bid.admin.entity.Role" >
+    <id column="role_id" property="roleId" jdbcType="BIGINT" />
+    <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from s_role
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.bid.admin.entity.Role" >
+    <selectKey resultType="java.lang.Long" keyProperty="role_id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into s_role (role_code, role_name)
+    values (#{roleCode,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.bid.admin.entity.Role" >
+    update s_role
+    set role_code = #{roleCode,jdbcType=VARCHAR},
+      role_name = #{roleName,jdbcType=VARCHAR}
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select role_id, role_code, role_name
+    from s_role
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select role_id, role_code, role_name
+    from s_role
+  </select>
+  <!--other add-->
+
+  <select id="selectByRoleName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select role_id, role_code, role_name
+    from s_role
+    where role_name = #{roleName,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByRoleCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select role_id, role_code, role_name
+    from s_role
+    where role_code = #{roleCode,jdbcType=VARCHAR}
+  </select>
+  <select id="countRole" resultType="java.lang.Integer" >
+    SELECT
+    count(1)
+    from s_role
+    <where>
+      <trim prefix="(" suffix=")" prefixOverrides="and" >
+
+        <if test="roleCode!=null">
+          and role_code = #{roleCode}
+        </if>
+        <if test="roleName!=null">
+          and role_name = #{roleName}
+        </if>
+      </trim>
+    </where>
+
+  </select>
+  <select id="selectRole" resultMap="BaseResultMap" >
+    select role_id, role_code, role_name
+    from s_role
+    <where>
+      <trim prefix="(" suffix=")" prefixOverrides="and" >
+
+        <if test="roleCode!=null">
+          and role_code = #{roleCode}
+        </if>
+        <if test="roleName!=null">
+          and role_name = #{roleName}
+        </if>
+      </trim>
+    </where>
+    limit #{start},#{size}
+  </select>
+</mapper>

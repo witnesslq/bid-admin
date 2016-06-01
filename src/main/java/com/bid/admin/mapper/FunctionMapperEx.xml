@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bid.admin.mapper.FunctionMapperEx" >
+  <resultMap id="BaseResultMapEx" type="com.bid.admin.entity.FunctionEx" extends="com.bid.admin.mapper.FunctionMapper.BaseResultMap" >
+    <result column="children" property="children" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <select id="selectByPid" resultMap="BaseResultMapEx" >
+	SELECT
+	    a.func_id,
+	    a.func_name,
+	    a.parent_id,
+	    a.seq_num,
+	    count(b.func_id) children
+	FROM
+	    s_function a LEFT JOIN s_function b ON b.parent_id = a.func_id
+	    
+	<where>
+	    <if test="pid != null" >
+	      and a.parent_id = #{pid}
+	    </if>
+	</where>
+	 
+	GROUP BY
+	  a.func_id,
+	  a.func_name,
+	  a.parent_id
+	    
+	ORDER BY
+	    seq_num
+    
+  </select>
+  
+  <select id="selectByRoleId" resultMap="com.bid.admin.mapper.FunctionMapper.BaseResultMap" >
+	SELECT
+	    a.*
+	FROM
+	    s_function a
+	JOIN s_role_func b ON b.func_id = a.func_id
+        
+    <where>
+        <if test="roleId != null" >
+          and b.role_id = #{roleId}
+        </if>
+    </where>
+    
+  </select>
+  
+</mapper>
